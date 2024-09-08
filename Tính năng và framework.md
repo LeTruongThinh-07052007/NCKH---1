@@ -50,14 +50,14 @@
 
 ## **Framework:**
 - **Front-end:**
-    - Phản ứng (Vite)
-    - Bộ công cụ Redux dành cho quản lý nhà nước
-    - Giao diện người dùng không đầu
-    - CSS gió giật
+    - React (Vite)
+    - Redux Toolkit for State Management
+    - HeadlessUI
+    - Tailwind CSS 
 
 
 - **Backend:**
     - Node.js với Express.js
     
 - **Database:**
-    - MongoDB để lưu trữ dữ liệu hiệu quả và có thể mở rộng.
+    - MongoDB 
