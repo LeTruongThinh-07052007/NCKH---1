@@ -16,11 +16,13 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import Tabs from "../components/Tabs";
-import { PRIORITYSTYLES, TASK_TYPE, getInitials } from "../utils";
+import { PRIORITYSTYLES, TASK_TYPE, formatDate, getInitials } from "../utils";
 import Loading from "../components/Loader";
 import Button from "../components/Button";
 import { useGetSingleTaskQuery } from "../redux/slices/api/taskApiSlice";
 import { usePostTaskActivityMutation } from "../redux/slices/api/taskApiSlice";
+import { formatDateByDayJS } from "../utils/format";
+import { PRIORITY_EV, LISTS_EV } from "../constants/common";
 
 const assets = [
   "https://images.pexels.com/photos/2418664/pexels-photo-2418664.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
@@ -79,14 +81,14 @@ const TASKTYPEICON = {
   ),
 };
 
-const act_types = [
-  "Started",
-  "Completed",
-  "In Progress",
-  "Commented",
-  "Bug",
-  "Assigned", 
-];
+const act_types = {
+  "Started": "Bắt đầu",
+  "Completed": "Hoàn thành",
+  "In Progress": "Đang làm",
+  "Commented": "Bình luận",
+  "Bug": "Lỗi",
+  "Assigned": "Giao nhiệm vụ", 
+};
 
 const TaskDetails = () => {
   const { id } = useParams();
@@ -101,8 +103,8 @@ const TaskDetails = () => {
       <Loading/>
     </div>
   
-  );
-
+  );  
+  
   return (
     <div className='w-full flex flex-col gap-3 mb-4 overflow-y-hidden'>
       <h1 className='text-2xl text-gray-600 font-bold'>{task?.title}</h1>
@@ -122,7 +124,7 @@ const TaskDetails = () => {
                     )}
                   >
                     <span className='text-lg'>{ICONS[task?.priority]}</span>
-                    <span className='uppercase'>{task?.priority} Priority</span>
+                    <span className='uppercase'>{PRIORITY_EV[task?.priority.toUpperCase()]}</span>
                   </div>
 
                   <div className={clsx("flex items-center gap-2")}>
@@ -132,12 +134,12 @@ const TaskDetails = () => {
                         TASK_TYPE[task.stage]
                       )}
                     />
-                    <span className='text-black uppercase'>{task?.stage}</span>
+                    <span className='text-black uppercase'>{LISTS_EV[task?.stage.toUpperCase()]}</span>
                   </div>
                 </div>
 
                 <p className='text-gray-500'>
-                  Created At: {new Date(task?.date).toDateString()}
+                  Ngày tạo: {formatDateByDayJS(task?.date)}
                 </p>
 
                 <div className='flex items-center gap-8 p-4 border-y border-gray-200'>
@@ -240,7 +242,7 @@ const TaskDetails = () => {
 };
 
 const Activities = ({ activity, id, refetch }) => {
-  const [selected, setSelected] = useState(act_types[0]);
+  const [selected, setSelected] = useState(Object.keys(act_types)[0]);
   const [text, setText] = useState("");
   
 
@@ -267,7 +269,8 @@ const Activities = ({ activity, id, refetch }) => {
     }
   };
 
-  const Card = ({ item }) => {
+  const Card = ({ item }) => { 
+    
     return (
       <div className='flex space-x-4'>
         <div className='flex flex-col items-center flex-shrink-0'>
@@ -282,10 +285,10 @@ const Activities = ({ activity, id, refetch }) => {
         <div className='flex flex-col gap-y-1 mb-8'>
           <p className='font-semibold'>{item?.by?.name}</p>
           <div className='text-gray-500 space-y-2'>
-            <span className='capitalize'>{item?.type}</span>
+            <span className='capitalize mr-2'>{act_types[item?.type[0].toUpperCase() + item?.type.slice(1)]}</span>
             <span className='text-sm'>{moment(item?.date).fromNow()}</span>
           </div>
-          <div className='text-gray-700'>{item?.activity}</div>
+          <div className='text-gray-700'>{item?.activity.replace("HIGH priority", "Cao").replace("MEDIUM priority", "Trung bình").replace("NORMAL priority", "Thấp")}</div>
         </div>
       </div>
     );
@@ -312,7 +315,7 @@ const Activities = ({ activity, id, refetch }) => {
           Thêm hành động
         </h4>
         <div className='w-full flex flex-wrap gap-5'>
-          {act_types.map((item, index) => (
+          {Object.keys(act_types).map((item, index) => (
             <div key={item} className='flex gap-2 items-center'>
               <input
                 type='checkbox'
@@ -320,7 +323,7 @@ const Activities = ({ activity, id, refetch }) => {
                 checked={selected === item ? true : false}
                 onChange={(e) => setSelected(item)}
               />
-              <p>{item}</p>
+              <p>{act_types[item]}</p>
             </div>
           ))}
           <textarea

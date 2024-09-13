@@ -9,7 +9,7 @@ export const dbConnection = async () => {
   } catch (error) {
     console.log("DB Error: " + error);
   }
-};
+}; 
 
 export const createJWT = (res, userId) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {

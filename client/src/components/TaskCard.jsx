@@ -7,13 +7,15 @@ import {
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { BGS, PRIORITYSTYLES, TASK_TYPE, formatDate } from "../utils";
+import { BGS, PRIORITYSTYLES, TASK_TYPE } from "../utils";
+import {formatDateByDayJS} from '../utils/format';
 import TaskDialog from "./task/TaskDialog";
 import { BiMessageAltDetail } from "react-icons/bi";
 import { FaList } from "react-icons/fa";
 import UserInfo from "./UserInfo";
 import { IoMdAdd } from "react-icons/io";
 import AddSubTask from "./task/AddSubTask";
+import { PRIORITY_EV } from "../constants/common";
 
 
 
@@ -22,10 +24,11 @@ const ICONS = {
   medium: <MdKeyboardArrowUp />,
   low: <MdKeyboardArrowDown />,
 };
-
+ 
 const TaskCard = ({ task }) => {
   const { user } = useSelector((state) => state.auth);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); 
+  
 
   return (
     <>
@@ -38,7 +41,7 @@ const TaskCard = ({ task }) => {
             )}
           >
             <span className='text-lg'>{ICONS[task?.priority]}</span>
-            <span className='uppercase'>{task?.priority} Priority</span>
+            <span className='uppercase'>{PRIORITY_EV[task?.priority.toUpperCase()]}</span>
           </div>
 
           { <TaskDialog task={task} />}
@@ -52,7 +55,7 @@ const TaskCard = ({ task }) => {
             <h4 className='line-clamp-1 text-black'>{task?.title}</h4>
           </div>
           <span className='text-sm text-gray-600'>
-            {formatDate(new Date(task?.date))}
+            {formatDateByDayJS(task?.date)}
           </span>
         </>
 
@@ -97,7 +100,7 @@ const TaskCard = ({ task }) => {
 
             <div className='p-4 space-x-8'>
               <span className='text-sm text-gray-600'>
-                {formatDate(new Date(task?.subTasks[0]?.date))}
+                {formatDateByDayJS(task?.subTasks[0]?.date)}
               </span>
               <span className='bg-blue-600/10 px-3 py-1 rounded0full text-blue-700 font-medium'>
                 {task?.subTasks[0].tag}

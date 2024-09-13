@@ -13,9 +13,7 @@ import Loading from "../Loader";
 import { useCreateTaskMutation, useUpdateTaskMutation } from "../../redux/slices/api/taskApiSlice";
 import { toast } from "sonner";
 import { dateFormatter } from "../../utils";
-
-const LISTS = ["TODO", "IN PROGRESS", "COMPLETED"];
-const PRIORITY = ["HIGH", "MEDIUM", "NORMAL", "LOW"];
+import {LISTS_VE, PRIORITY_VE} from '../../constants/common';
 
 const AddTask = ({ open, setOpen, task = null }) => {
 
@@ -36,9 +34,9 @@ const AddTask = ({ open, setOpen, task = null }) => {
     formState: { errors },
   } = useForm({defaultValues});
   const [team, setTeam] = useState(task?.team || []);
-  const [stage, setStage] = useState(task?.stage?.toUpperCase() || LISTS[0]);
+  const [stage, setStage] = useState(task?.stage?.toUpperCase() || Object.keys(LISTS_VE)[0]);
   const [priority, setPriority] = useState(
-    task?.priority?.toUpperCase() || PRIORITY[2]
+    task?.priority?.toUpperCase() || Object.keys(PRIORITY_VE)[0]
   );
   const [assets, setAssets] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -83,14 +81,14 @@ const AddTask = ({ open, setOpen, task = null }) => {
     try {
       for (const file of assets) {
         await uploadFile(file);
-      }
+      } 
 
       const newData = {
         ...data,
         assets: [...URLS, ...uploadedFileURLs],
         team,
-        stage,
-        priority,
+        stage: LISTS_VE[stage],
+        priority: PRIORITY_VE[priority],
       };
 
       const res = task?._id
@@ -139,7 +137,7 @@ const AddTask = ({ open, setOpen, task = null }) => {
           <div className="flex gap-4">
             <SelectList
               label="Phân loại"
-              lists={LISTS}
+              lists={Object.keys(LISTS_VE)}
               selected={stage}
               setSelected={setStage}
             />
@@ -162,7 +160,7 @@ const AddTask = ({ open, setOpen, task = null }) => {
           <div className="flex gap-4">
             <SelectList
               label="Mức độ ưu tiên"
-              lists={PRIORITY}
+              lists={Object.keys(PRIORITY_VE)}
               selected={priority}
               setSelected={setPriority}
             />

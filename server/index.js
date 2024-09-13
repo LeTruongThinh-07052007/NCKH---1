@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "https://slumbershift.io.vn"],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })

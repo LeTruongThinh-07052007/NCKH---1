@@ -15,6 +15,8 @@ import Button from "../Button";
 import ConfirmatioDialog from "../Dialogs";
 import { useTrashTastMutation} from "../../redux/slices/api/taskApiSlice";
 import AddTask from "./AddTask";
+import { PRIORITY_EV } from "../../constants/common";
+import { formatDateByDayJS } from "../../utils/format";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -88,14 +90,14 @@ const Table = ({ tasks }) => {
             {ICONS[task?.priority]}
           </span>
           <span className='capitalize line-clamp-1'>
-            {task?.priority} Priority
+            {PRIORITY_EV[task?.priority.toUpperCase()]}
           </span>
         </div>
       </td>
 
       <td className='py-2'>
         <span className='text-sm text-gray-600'>
-          {formatDate(new Date(task?.date))}
+          {formatDateByDayJS(task?.date)}
         </span>
       </td>
 
