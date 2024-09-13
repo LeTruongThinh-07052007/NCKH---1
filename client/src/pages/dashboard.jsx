@@ -16,6 +16,7 @@ import { BGS, PRIORITYSTYLES, TASK_TYPE, getInitials } from "../utils";
 import UserInfo from "../components/UserInfo";
 import { useGetDasboardStatsQuery } from "../redux/slices/api/taskApiSlice";
 import Loading from "../components/Loader";
+import {PRIORITY_EV} from "../constants/common";
 
 const TaskTable = ({ tasks }) => {
   const ICONS = {
@@ -52,7 +53,7 @@ const TaskTable = ({ tasks }) => {
           <span className={clsx("text-lg", PRIORITYSTYLES[task.priority])}>
             {ICONS[task.priority]}
           </span>
-          <span className='capitalize'>{task.priority}</span>
+          <span className='capitalize'>{PRIORITY_EV[task.priority.toUpperCase()]}</span>
         </div>
       </td>
 
